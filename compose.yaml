@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tcd_accounts
+      POSTGRES_USER: tcd_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env file}
+    volumes:
+      - tcd_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tcd_app -d tcd_accounts"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    # Do not publish the database port to the public internet.
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgres://tcd_app:${POSTGRES_PASSWORD}@db:5432/tcd_accounts
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET in your .env file}
+      TRUST_PROXY: "false"
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  tcd_postgres_data:

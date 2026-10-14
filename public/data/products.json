@@ -1,0 +1,18 @@
+[
+  {
+    "id": "dji-mic-mini",
+    "title": "DJI Mic Mini + OBS Studio",
+    "category": "Streaming",
+    "status": "Article to write",
+    "affiliate_url": "",
+    "notes": "Only publish a firsthand review after confirming personal testing and adding real findings."
+  },
+  {
+    "id": "raspberry-pi",
+    "title": "Raspberry Pi 5 Home Lab",
+    "category": "Computing",
+    "status": "Guide outline",
+    "affiliate_url": "",
+    "notes": "Add specific product links only where they genuinely help the reader."
+  }
+]

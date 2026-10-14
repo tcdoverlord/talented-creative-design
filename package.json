@@ -1,0 +1,30 @@
+{
+  "name": "talented-creative-design",
+  "version": "2.3.0",
+  "private": true,
+  "description": "Talented Creative Design digital software store and services: accounts, Stripe checkout/subscriptions, protected downloads, service listings and project inquiries",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "check": "node --check server/index.js && node --check public/js/shop.js && node --check public/js/my-account.js && node --check public/js/admin.js && node --check public/js/account.js && node --check public/js/verify-email.js && node --check public/js/reset-password.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "argon2": "^0.41.1",
+    "connect-pg-simple": "^10.0.0",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.1.0",
+    "pg": "^8.13.1",
+    "sequelize": "^6.37.5",
+    "stripe": "^18.5.0",
+    "@aws-sdk/client-s3": "^3.850.0",
+    "@aws-sdk/s3-request-presigner": "^3.850.0",
+    "nodemailer": "^7.0.5"
+  }
+}

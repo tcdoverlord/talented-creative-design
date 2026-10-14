@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08111f">
+<title>Store Admin | Talented Creative Design</title><link rel="stylesheet" href="css/styles.css"><script src="js/app.js" defer></script><script src="js/admin.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="container nav-wrap"><a class="brand" href="index.html"><img src="assets/logo.svg" alt="" width="42" height="42"><span><strong>Talented Creative Design</strong><small>STORE ADMINISTRATION</small></span></a><nav class="primary-nav"><a href="shop.html">Shop</a><a href="services.html">Services</a><a href="account.html">My account</a></nav></div></header>
+<main class="section container admin-page">
+  <div class="admin-heading"><div><span class="eyebrow">PRIVATE ADMINISTRATION</span><h1>Store dashboard</h1><p class="muted">Create products, set up pricing and manage software releases from one place.</p></div><a class="button button-secondary" href="shop.html" target="_blank" rel="noopener">Preview shop ↗</a></div>
+  <div id="admin-message" class="notice" role="status" aria-live="polite" hidden></div>
+  <div id="admin-summary" class="admin-stats" aria-label="Store statistics"></div>
+  <section class="account-panel admin-create-panel">
+    <div class="admin-section-heading"><div><span class="step-kicker">PRODUCT SETUP</span><h2>Create a software listing</h2><p class="muted small">Like an online marketplace: add photos, write the listing, set your price, attach the software file, then publish.</p></div><span class="admin-icon" aria-hidden="true">＋</span></div>
+    <form id="product-form" class="admin-form product-wizard">
+      <fieldset class="admin-fieldset"><legend><span>1</span> Product details</legend>
+        <div class="admin-form-grid">
+          <label class="field-wide">Product name <span class="required-mark">*</span><input name="name" required maxlength="180" placeholder="Safe USB Eject" autocomplete="off"><small>The name customers will see in your shop.</small></label>
+          <label>URL slug <span class="required-mark">*</span><input name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="120" placeholder="safe-usb-eject"><small>Generated from the name; you can edit it.</small></label>
+          <label>Product status<select name="status"><option value="draft">Draft — not visible in shop</option><option value="published">Published — visible in shop</option><option value="archived">Archived</option></select></label>
+          <label class="field-wide">Short product description <span class="required-mark">*</span><textarea name="description" rows="4" maxlength="10000" required placeholder="Explain what the software does, who it is for, and why it helps."></textarea><small id="description-count">0 / 10,000 characters</small></label>
+          <div class="field-wide upload-dropzone" id="photo-dropzone"><label class="upload-picker"> <span class="upload-symbol">＋</span><strong>Add product photos</strong><span class="muted small">Choose or drop up to 8 JPG, PNG, WebP or GIF photos · 12 MB each</span><input id="product-photos" name="photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><div id="product-image-preview" class="admin-image-preview gallery-preview"><span>Your product photos will appear here.</span></div><p class="muted small">Photos upload to private object storage when you save the listing. The first photo becomes the main shop image.</p></div>
+          <label>Supported platforms<input name="platforms" placeholder="Windows, Linux, macOS"><small>Separate platform names with commas.</small></label>
+          <label>Key features<textarea name="features" rows="4" placeholder="Easy to use\nLightweight\nPrivacy-focused"></textarea><small>Enter one feature per line.</small></label>
+        </div>
+      </fieldset>
+      <fieldset class="admin-fieldset"><legend><span>2</span> Initial price <em>Optional</em></legend>
+        <p class="muted small">You can add more price options after saving. Create the matching product price in Stripe first, then paste its Price ID.</p>
+        <div class="admin-form-grid">
+          <label>Price label<input name="priceLabel" maxlength="80" placeholder="Personal license"></label>
+          <label>Price amount<input name="priceAmount" type="number" min="0" max="1000000" step="0.01" inputmode="decimal" placeholder="9.99"><small>Enter dollars, e.g. 9.99 — not cents.</small></label>
+          <label>Billing interval<select name="priceInterval"><option value="one_time">One-time purchase</option><option value="month">Monthly subscription</option><option value="year">Yearly subscription</option></select></label>
+          <label>Currency<select name="priceCurrency"><option value="usd">USD — US dollar</option><option value="cad">CAD — Canadian dollar</option><option value="gbp">GBP — British pound</option><option value="eur">EUR — Euro</option></select></label>
+          <label class="field-wide">Stripe Price ID<input name="stripePriceId" maxlength="160" placeholder="price_..." autocomplete="off"><small>Leave blank to save the product without enabling checkout. Checkout will not work until a valid Stripe Price ID is configured.</small></label>
+        </div>
+      </fieldset>
+      <fieldset class="admin-fieldset"><legend><span>3</span> Initial software release <em>Optional</em></legend>
+        <p class="muted small">Software installers must be uploaded separately to your private storage bucket. Enter the object key here; do not paste a public download URL.</p>
+        <div class="admin-form-grid">
+          <label>Version<input name="releaseVersion" maxlength="50" pattern="[A-Za-z0-9._+-]{1,50}" placeholder="1.0.0"></label>
+          <label>Publish release<select name="releasePublished"><option value="false">Save as unpublished</option><option value="true">Publish release now</option></select></label>
+          <div class="field-wide upload-dropzone"><label class="upload-picker installer-picker"><span class="upload-symbol">⇧</span><strong>Upload software installer</strong><span class="muted small">Choose the ZIP, EXE, MSI or other release file from your computer · up to 2 GB</span><input id="product-installer" name="installer" type="file"></label><div id="installer-upload-status" class="upload-file-status">No installer selected. You can add a release later.</div><input name="objectKey" type="hidden"><small class="muted">The installer is uploaded to private storage and linked to this product automatically.</small></div>
+          <label class="field-wide">Release notes<textarea name="releaseNotes" rows="3" maxlength="10000" placeholder="What's new in this version?"></textarea></label>
+        </div>
+      </fieldset>
+      <div class="admin-form-actions"><p class="muted small">Products are saved to your database. Nothing is charged when you create a product.</p><button id="create-product-button" class="button button-primary" type="submit">Save listing</button></div>
+    </form>
+  </section>
+  <section class="account-panel"><div class="admin-section-heading"><div><h2>Your products</h2><p class="muted small">Edit product details, add pricing options, and manage releases.</p></div><button class="button button-secondary" id="refresh-admin" type="button">↻ Refresh</button></div><div id="admin-products" aria-live="polite"><p class="muted">Loading products…</p></div></section>
+  <section class="account-panel admin-create-panel"><div class="admin-section-heading"><div><span class="step-kicker">SERVICE SETUP</span><h2>Create a service listing</h2><p class="muted small">Offer consulting, setup, design, troubleshooting or custom project work. Services can have a fixed price, starting price or quote-based pricing.</p></div><span class="admin-icon" aria-hidden="true">✦</span></div>
+    <form id="service-form" class="admin-form product-wizard"><fieldset class="admin-fieldset"><legend><span>1</span> Service listing</legend><div class="admin-form-grid">
+      <label>Service name <span class="required-mark">*</span><input name="name" required maxlength="180" placeholder="Website Setup & Support"></label><label>URL slug <span class="required-mark">*</span><input name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="120" placeholder="website-setup-support"></label>
+      <label>Category<input name="category" maxlength="80" placeholder="Web & Software"></label><label>Status<select name="status"><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></label>
+      <label class="field-wide">Short summary<input name="summary" maxlength="300" placeholder="A concise customer-facing summary" required></label><label class="field-wide">Full description<textarea name="description" rows="5" maxlength="10000" required placeholder="Describe what's included, who this service helps, and what the customer receives."></textarea></label>
+      <label>Features / deliverables<textarea name="features" rows="4" placeholder="Initial consultation
+Project plan
+Delivery and handoff"></textarea><small>One item per line.</small></label><label>Estimated timeline<input name="deliveryTime" maxlength="120" placeholder="Typically 3–5 business days"></label>
+      <label>Pricing model<select name="pricingType"><option value="quote">Request a quote</option><option value="starting_at">Starting at</option><option value="fixed">Fixed price</option></select></label><label>Price in dollars<input name="priceAmount" type="number" min="0" max="1000000" step="0.01" placeholder="150.00"><small>Required for fixed or starting-at pricing.</small></label><label>Currency<select name="currency"><option value="usd">USD</option><option value="cad">CAD</option><option value="gbp">GBP</option><option value="eur">EUR</option></select></label>
+      <div class="field-wide upload-dropzone" id="service-photo-dropzone"><label class="upload-picker"><span class="upload-symbol">＋</span><strong>Add service photos</strong><span class="muted small">Up to 8 JPG, PNG, WebP or GIF photos · 12 MB each</span><input id="service-photos" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><div id="service-image-preview" class="admin-image-preview gallery-preview"><span>Service photos appear here.</span></div></div>
+    </div></fieldset><div class="admin-form-actions"><p class="muted small">Published services appear on the public Services page. Customers can send inquiries without paying online.</p><button id="create-service-button" class="button button-primary" type="submit">Save service listing</button></div></form>
+  </section>
+  <section class="account-panel"><div class="admin-section-heading"><div><h2>Your services</h2><p class="muted small">Edit listings or change draft/published status.</p></div><button class="button button-secondary" id="refresh-services" type="button">↻ Refresh services</button></div><div id="admin-services"><p class="muted">Loading services…</p></div></section>
+  <section class="account-panel"><h2>Service inquiries</h2><p class="muted small">New project requests arrive here. Update their status as you follow up.</p><div id="admin-service-inquiries"><p class="muted">Loading inquiries…</p></div></section>
+  <section class="account-panel"><h2>Recent orders</h2><div id="admin-orders"><p class="muted">Loading orders…</p></div></section>
+  <section class="account-panel"><h2>Customers</h2><div id="admin-users"><p class="muted">Loading customers…</p></div></section>
+  <p class="muted small admin-safety-note">Admin access is enforced by the server. Never share your admin login or place Stripe secret keys in these product fields.</p>
+</main>
+</body></html>
