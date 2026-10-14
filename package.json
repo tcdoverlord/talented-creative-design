@@ -1,13 +1,14 @@
 {
   "name": "talented-creative-design",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "private": true,
   "description": "Talented Creative Design digital software store and services: accounts, Stripe checkout/subscriptions, protected downloads, service listings and project inquiries",
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",
-    "check": "node --check server/index.js && node --check public/js/shop.js && node --check public/js/my-account.js && node --check public/js/admin.js && node --check public/js/account.js && node --check public/js/verify-email.js && node --check public/js/reset-password.js"
+    "check": "node --check server/index.js && node --check public/js/account.js && node --check public/js/shop.js && node --check public/js/my-account.js && node --check public/js/admin.js && node --check public/js/account.js && node --check public/js/admin-security.js && node --check public/js/verify-email.js && node --check public/js/reset-password.js && node --check scripts/promote-admin.js",
+    "admin:promote": "node scripts/promote-admin.js"
   },
   "engines": {
     "node": ">=20"
@@ -25,6 +26,8 @@
     "stripe": "^18.5.0",
     "@aws-sdk/client-s3": "^3.850.0",
     "@aws-sdk/s3-request-presigner": "^3.850.0",
-    "nodemailer": "^7.0.5"
+    "nodemailer": "^7.0.5",
+    "otplib": "^12.0.1",
+    "qrcode": "^1.5.4"
   }
 }

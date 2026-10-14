@@ -48,3 +48,14 @@ Use this checklist in a staging environment first. A checked box means you perso
 - [ ] Privacy policy, terms, refund/cancellation policy, software license and contact information are published.
 - [ ] Test on desktop and mobile; check keyboard access and form validation.
 - [ ] Use Stripe test mode until every applicable check is passed; only then consider live mode.
+
+
+## Additional Railway staging gates
+- [ ] Confirm new public registrations always receive the `customer` role.
+- [ ] Confirm no `ADMIN_EMAIL` variable or public endpoint can grant administrator privileges.
+- [ ] Verify the administrator account's email before promoting it through the one-off CLI script.
+- [ ] Set Railway `TRUST_PROXY=true` so secure session cookies work behind Railway's HTTPS proxy.
+- [ ] Set the Railway health check path to `/api/health`.
+- [ ] Use Stripe test keys and test webhook secret only during staging.
+- [ ] Verify S3-compatible bucket permissions and CORS for browser uploads; keep the bucket private.
+- [ ] Verify backups and test a database restore before production.

@@ -21,12 +21,14 @@
 <button class="auth-tab active" type="button" data-mode="signin" aria-selected="true">Sign in</button>
 <button class="auth-tab" type="button" data-mode="register" aria-selected="false">Create account</button>
 </div>
+<a class="button button-secondary google-signin" href="/auth/google" style="display:block;text-align:center;text-decoration:none;margin:16px 0">Continue with Google</a><p class="muted small" style="text-align:center">or use your email and password</p>
 <form class="auth-form" id="account-form" novalidate>
 <label id="display-name-wrap" hidden>Display name (optional)<input type="text" name="displayName" autocomplete="nickname" maxlength="80" placeholder="How should we address you?"></label>
 <label>Email address<input type="email" name="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required></label>
 <label>Password<input type="password" name="password" autocomplete="current-password" minlength="12" maxlength="128" placeholder="At least 12 characters" required></label>
 <button class="button button-primary" type="submit" id="account-submit">Sign in</button>
 </form>
+<form id="two-factor-form" class="auth-form" hidden><label>Authenticator code<input type="text" name="code" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" maxlength="6" required></label><button class="button button-primary" type="submit">Verify code</button></form>
 <div id="account-message" class="auth-message" role="status" aria-live="polite" hidden></div>
 <form id="forgot-form" class="auth-form forgot-form"><h2>Forgot your password?</h2><label>Email address<input type="email" name="email" autocomplete="email" maxlength="254" required></label><button class="button button-secondary" type="submit">Send reset link</button></form>
 <p class="auth-footnote">Use a unique password you do not use on other sites. Registration and login work only when the website is running on its configured server over HTTPS.</p>

@@ -8,6 +8,7 @@
   const description = document.querySelector("#auth-description");
   const displayNameWrap = document.querySelector("#display-name-wrap");
   const forgotForm = document.querySelector("#forgot-form");
+  const twoFactorForm = document.querySelector("#two-factor-form");
   let mode = "signin";
   let csrfToken = "";
 
@@ -63,6 +64,7 @@
         body: JSON.stringify(payload)
       });
       const result = await response.json().catch(() => ({}));
+      if (response.ok && result.requiresTwoFactor) { form.hidden = true; forgotForm.hidden = true; twoFactorForm.hidden = false; showMessage(result.message || "Enter your authenticator code."); return; }
       if (!response.ok) {
         showMessage(result.error || "The request failed. Please try again.", true);
         await getCsrf();
@@ -79,6 +81,11 @@
     }
   });
 
+  if (twoFactorForm) twoFactorForm.addEventListener("submit", async event => {
+    event.preventDefault(); message.hidden = true;
+    try { if (!csrfToken) await getCsrf(); const code = String(new FormData(twoFactorForm).get("code") || "").trim(); const response = await fetch("/api/auth/2fa/verify", {method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json","X-CSRF-Token":csrfToken},body:JSON.stringify({code})}); const result = await response.json().catch(()=>({})); if(!response.ok) throw new Error(result.error || "Could not verify code."); csrfToken=result.csrfToken||""; window.location.href="/account.html"; } catch(error) { showMessage(error.message,true); }
+  });
+
   forgotForm.addEventListener("submit", async event => {
     event.preventDefault(); message.hidden = true;
     try {
@@ -89,5 +96,7 @@
       showMessage(result.message);
     } catch (error) { showMessage(error.message, true); }
   });
+  if (new URLSearchParams(window.location.search).has("google2fa")) { form.hidden = true; forgotForm.hidden = true; twoFactorForm.hidden = false; showMessage("Google sign-in succeeded. Enter your administrator authenticator code."); }
+  if (new URLSearchParams(window.location.search).has("google")) showMessage("Google sign-in could not be completed. Check the OAuth setup and try again.", true);
   getCsrf().catch(error => showMessage(error.message, true));
 })();
