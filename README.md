@@ -28,14 +28,23 @@ This is a **feature-complete integration scaffold, not a certified production-re
 
 Do not use production Stripe secrets locally or commit `.env`.
 
-## Administrator setup
+## Administrator setup (secure one-off promotion)
 
-1. Set `ADMIN_EMAIL` in the environment **before registering the administrator account**.
-2. Register that exact email address using the account page.
-3. For an existing deployment, do not expose a public role-change route. Promote the chosen account through a secure database administration session after verifying the email. Example SQL: `UPDATE users SET role = 'admin' WHERE email = 'you@example.com';`
-4. Open `/admin.html`. The APIs independently check the role in the database.
+1. Register your account normally.
+2. Configure SMTP and verify that account's email address.
+3. Run the promotion script from a trusted terminal with database access. It requires the same email as both the command argument and explicit confirmation variable, and refuses to promote unverified accounts.
 
-The app intentionally does not create a default admin password.
+On Windows PowerShell, after dependencies are installed and `DATABASE_URL` points to the intended database:
+
+```powershell
+$env:CONFIRM_ADMIN_PROMOTION = "you@example.com"
+npm run admin:promote -- you@example.com
+Remove-Item Env:CONFIRM_ADMIN_PROMOTION
+```
+
+For a remote Railway database, run the command only from an authorized trusted environment with the correct Railway `DATABASE_URL` configured. Do not paste database credentials into chat or commit them to GitHub. After promotion, sign out and sign back in. Public registration always assigns the `customer` role; there is no public role-change endpoint.
+
+The app intentionally does not create a default admin password. The promotion script is a one-off operational command, not an HTTP endpoint.
 
 ## Stripe setup (test mode first)
 
@@ -71,7 +80,23 @@ The admin listing form now supports selecting or dropping up to eight product ph
 
 **Bucket CORS is required for browser uploads.** In your storage provider's CORS settings, allow the exact origin of your deployed website (and `http://localhost:3000` for local testing), method `PUT`, and request header `Content-Type`. Do not use wildcard origins for a production bucket. Ensure the bucket's API credentials are kept only in the server environment and never exposed to browser code. Browser uploads have not been verified against your specific storage provider yet; test one small image and one test installer before publishing a real listing.
 
-## Railway deployment outline
+## Railway staging deployment outline
+
+**Use staging first. Do not enable live payments until the launch checklist passes.**
+
+1. Commit this project to a private GitHub repository. Confirm `.env` and credentials are not tracked.
+2. Create a Railway project and add a PostgreSQL service.
+3. Deploy this repository as a service using its included `Dockerfile` (Railway should detect it automatically).
+4. Set `DATABASE_URL` to the Railway Postgres reference variable, `NODE_ENV=production`, a unique `SESSION_SECRET` of at least 32 characters, `TRUST_PROXY=true`, and `APP_BASE_URL` to the Railway HTTPS URL.
+5. Set `PORT` only if Railway does not supply it automatically. The application listens on `process.env.PORT`.
+6. Set the health check path to `/api/health`. The route returns `503` if PostgreSQL is unavailable.
+7. Keep `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` empty until you are ready to configure Stripe **test mode**. Do not use live keys for initial staging.
+8. Add SMTP credentials and private object-storage credentials only after creating those services. Do not expose the database publicly.
+9. Verify registration creates a customer, verify email delivery, then use the one-off promotion script to grant admin access to the verified account.
+10. Test product/service creation, image uploads, private installer uploads, test payments, webhook delivery, download authorization, subscription cancellation, and backups.
+
+The included `railway.json` sets `/api/health` as the deployment health check. Railway configuration does not mean the external integrations have been configured or verified.
+
 
 1. Push this repository to a private GitHub repo; verify `.env` is not tracked.
 2. Create a Railway project and PostgreSQL service.
@@ -88,3 +113,31 @@ Do not publish PostgreSQL directly to the internet. Enable database backups and 
 ## Services listings and project inquiries
 
 The site includes a public `services.html` page and an admin service-listing workflow. Admins can upload up to eight service photos using the existing private S3-compatible upload setup, write summaries/descriptions/features, choose quote / starting-at / fixed pricing, and publish or archive listings. Visitors can submit a service inquiry without checking out; inquiries are saved in PostgreSQL and appear in Store Admin, where their status can be updated. Service inquiries are not paid bookings and do not create a contract. Configure email/SMTP and add a notification workflow before relying on instant email alerts; the current flow stores inquiries for admin review.
+
+
+## Authentication upgrades (v2.4.0)
+
+- Railway HTTPS proxy is trusted in production so secure session cookies work behind Railway's TLS termination; this addresses the common cause of the CSRF/session-token error.
+- Optional Google OAuth sign-in: configure `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `APP_BASE_URL`. Add this exact authorized redirect URI in Google Cloud: `${APP_BASE_URL}/auth/google/callback` (without a trailing slash in APP_BASE_URL).
+- Admin TOTP authenticator endpoints are included: while signed in as a verified administrator, `GET /api/admin/2fa/setup` returns a QR data URL and secret; confirm enrollment using `POST /api/admin/2fa/enable` with `{ "code": "123456" }` and `X-CSRF-Token`. Disable with `POST /api/admin/2fa/disable` plus current code. Never expose the QR/secret publicly.
+- Administrator role is still granted only using the existing `npm run admin:promote` script, requiring a verified account and an explicit email confirmation. No default admin password is embedded.
+- Database startup adds the new Google and TOTP columns without dropping existing customer or order data.
+
+### Important before production
+Google sign-in requires OAuth credentials from Google Cloud Console. Authenticator enrollment API is present, but configure and test the admin enrollment UI before considering 2FA fully user-friendly. Email verification/reset still require working SMTP. Keep Stripe in test mode until checkout, webhook, and order fulfillment are tested end-to-end.
+
+
+### Google Cloud setup checklist
+1. Create/select a Google Cloud project and configure the OAuth consent screen.
+2. Create an OAuth Client ID of type **Web application**.
+3. Add your deployed origin (for example `https://talented-creative-design-production.up.railway.app`) as an authorized JavaScript origin.
+4. Add the exact redirect URI `https://talented-creative-design-production.up.railway.app/auth/google/callback` as an authorized redirect URI.
+5. Add the OAuth client ID and client secret to Railway variables as `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`; confirm `APP_BASE_URL` exactly matches the public origin, without a trailing slash.
+6. Deploy this package to a separate staging service/branch first. Never paste OAuth secrets into chat or commit them to Git.
+
+### Suggested safe deployment sequence
+- Create a new Git branch and Railway staging service; do not replace the current production deployment yet.
+- Keep the same database for testing only if you understand that the startup migration adds columns to the existing `users` table. Prefer a separate staging database for safer testing.
+- Set `NODE_ENV=production`, `SESSION_SECRET` (32+ random characters), `DATABASE_URL`, `APP_BASE_URL`, and optional Google OAuth values in Railway. The app now trusts Railway's first proxy in production for HTTPS secure cookies.
+- Test `/api/auth/csrf` and confirm a `tcd.sid` cookie is stored; test customer registration/login, Google sign-in, verified admin promotion, then enroll and test authenticator login.
+- Only switch production after tests pass. Existing Stripe, SMTP, and private object-storage settings must be preserved/configured independently.
