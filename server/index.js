@@ -39,7 +39,7 @@ app.post("/api/stripe/webhook",express.raw({type:"application/json",limit:"1mb"}
   try{await handleStripeEvent(event);res.json({received:true});}catch(e){console.error("Webhook processing failed",e.name||"Error");res.status(500).send("Webhook processing failed; provider may retry.");}
 });
 app.use(express.json({limit:"20kb",type:"application/json"})); app.use(express.urlencoded({extended:false,limit:"20kb"}));
-app.use(session({name:"tcd.sid",store:new PgSession({conString:process.env.DATABASE_URL,tableName:"user_sessions",createTableIfMissing:true,ttl:604800}),secret:process.env.SESSION_SECRET,resave:false,saveUninitialized:false,rolling:true,cookie:{httpOnly:true,secure:production,sameSite:"lax",maxAge:604800000,path:"/"}}));
+app.use(session({name:"tcd.sid",store:new PgSession({conString:process.env.DATABASE_URL,tableName:"user_sessions",createTableIfMissing:true,ttl:2592000}),secret:process.env.SESSION_SECRET,resave:false,saveUninitialized:false,rolling:true,cookie:{httpOnly:true,secure:production,sameSite:"lax",maxAge:2592000000,path:"/"}}));
 const authLimiter=rateLimit({windowMs:900000,limit:10,standardHeaders:"draft-7",legacyHeaders:false,message:{error:"Too many account attempts. Wait 15 minutes and try again."}});
 const checkoutLimiter=rateLimit({windowMs:60000,limit:10,standardHeaders:"draft-7",legacyHeaders:false});
 app.use("/api",rateLimit({windowMs:60000,limit:180,standardHeaders:"draft-7",legacyHeaders:false}));
