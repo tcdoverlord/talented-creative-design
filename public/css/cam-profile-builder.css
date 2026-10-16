@@ -1,0 +1,24 @@
+/* Member-only Cam Model Profile Builder */
+.profile-builder-page{max-width:1240px!important}
+.profile-lead{max-width:850px;color:var(--muted);margin-bottom:22px}
+.profile-gate,.profile-notice,.pb-github-guide{border:1px solid var(--line);border-radius:12px;background:#0e2035;padding:17px;margin:16px 0;color:var(--muted)}
+.profile-gate h2{color:var(--text);margin:0 0 8px}
+.profile-notice{border-color:#2d5477}
+.profile-builder-grid{display:grid;grid-template-columns:minmax(280px,.92fr) minmax(0,1.08fr);gap:16px;align-items:start}
+.profile-builder-grid>.account-panel{min-width:0}
+.profile-builder-grid label{display:block;margin:12px 0 5px;font-size:13px;color:#d5deeb}
+.profile-builder-grid input,.profile-builder-grid textarea,.profile-builder-grid select{width:100%;background:#081321;border:1px solid #344a62;border-radius:8px;padding:10px 11px;color:var(--text);font:inherit}
+.profile-builder-grid textarea{resize:vertical;max-width:100%}
+.profile-builder-grid input:focus,.profile-builder-grid textarea:focus,.profile-builder-grid select:focus{outline:2px solid #49c6ff55;border-color:#49c6ff}
+.profile-builder-grid h3{margin:22px 0 7px;padding-bottom:6px;border-bottom:1px solid var(--line);font-size:15px;color:var(--blue-light)}
+.pb-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pb-action-row,.pb-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.pb-tabs>*{flex:1}
+.pb-preview-pane{padding:10px;background:#050505;border:1px solid var(--line);border-radius:10px;overflow:auto}
+.pb-preview{max-width:100%;overflow-wrap:anywhere}
+.pb-preview img{max-width:100%;height:auto}
+.pb-html{width:100%;background:#060d17!important;font:12px/1.5 Consolas,monospace!important;min-height:380px;white-space:pre}
+.pb-github-guide pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#07111f;border:1px solid var(--line);padding:10px;border-radius:8px;color:#9fe5ff}
+.pb-github-guide li{margin:7px 0}
+@media(max-width:1000px){.profile-builder-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.pb-two{grid-template-columns:1fr}.profile-builder-grid>.account-panel{padding:14px}.pb-action-row .button{flex:1}}

@@ -122,6 +122,11 @@ app.get("/api/admin/service-inquiries",requireAdmin,async(req,res)=>res.json({in
 app.patch("/api/admin/service-inquiries/:id",requireAdmin,requireSameOrigin,requireCsrf,async(req,res)=>{const inquiry=await ServiceInquiry.findByPk(req.params.id);if(!inquiry)return res.status(404).json({error:"Inquiry not found."});if(!["new","in_progress","quoted","completed","closed"].includes(req.body.status))return res.status(400).json({error:"Invalid inquiry status."});inquiry.status=req.body.status;await inquiry.save();res.json({inquiry});});
 app.get("/api/admin/orders",requireAdmin,async(req,res)=>res.json({orders:await Order.findAll({include:[{model:OrderItem,as:"items"}],order:[["createdAt","DESC"]],limit:100})}));
 app.get("/api/admin/users",requireAdmin,async(req,res)=>res.json({users:await User.findAll({attributes:["id","email","displayName","role","emailVerifiedAt","createdAt"],order:[["createdAt","DESC"]],limit:100})}));
+app.get("/cam-profile-builder.html",(req,res)=>{
+  res.set("Cache-Control","no-store");
+  if(!req.session.userId)return res.redirect(302,"/login.html?next=%2Fcam-profile-builder.html");
+  return res.sendFile(path.resolve(__dirname,"../public/cam-profile-builder.html"));
+});
 app.use(express.static(path.resolve(__dirname,"../public"),{index:"index.html",dotfiles:"ignore",setHeaders(res,p){if(p.endsWith(".html"))res.setHeader("Cache-Control","no-cache");}}));
 app.get("/account.html",(req,res)=>res.sendFile(path.resolve(__dirname,"../public/account.html")));
 app.get("/verify-email.html",(req,res)=>res.sendFile(path.resolve(__dirname,"../public/verify-email.html")));
