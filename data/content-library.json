@@ -1,0 +1,78 @@
+{
+  "guides": [
+    {
+      "id": "chaturbate-start",
+      "title": "Starting on Chaturbate: Cam Model Starter Guide",
+      "summary": "A step-by-step beginner roadmap covering privacy and boundaries, camera choices, phone-as-camera setup, mounting, lighting, audio and internet, OBS, room preparation, and the first-show checklist. Start with existing gear before spending money.",
+      "category": "cam",
+      "label": "Cam Creator · Beginner",
+      "href": "chaturbate-model-start-guide.html",
+      "featured": true
+    },
+    {
+      "id": "dji-mic-mini-obs",
+      "title": "DJI Mic Mini + OBS Studio",
+      "summary": "Desktop and iPhone setup, receiver compatibility, the author’s OBS filter chain, troubleshooting, and disclosed gear links. Treat audio values as starting points, not universal settings.",
+      "category": "streaming",
+      "label": "Audio · Hands-on guide",
+      "href": "dji-mic-mini-obs-guide.html",
+      "featured": true
+    },
+    {
+      "id": "creator-guide-hub",
+      "title": "Creator Guides Hub",
+      "summary": "A quick index of the current creator setup guides, with paths to the Chaturbate and DJI audio walkthroughs.",
+      "category": "cam",
+      "label": "Creator Library",
+      "href": "creator-guides.html",
+      "featured": false
+    },
+    {
+      "id": "obs-basics",
+      "title": "OBS & Streaming Basics",
+      "summary": "Learn scenes, sources, audio meters, test recordings, and a repeatable pre-stream checklist.",
+      "category": "streaming",
+      "label": "Streaming · Topic",
+      "href": "guides.html?category=streaming",
+      "featured": false
+    },
+    {
+      "id": "privacy-safety",
+      "title": "Creator Privacy & Account Safety",
+      "summary": "Practical account security, privacy boundaries, and safer habits before and during live sessions.",
+      "category": "security",
+      "label": "Privacy · Topic",
+      "href": "guides.html?category=security",
+      "featured": false
+    },
+    {
+      "id": "hardware-buying",
+      "title": "Tech Hardware Buying Guides",
+      "summary": "Compare gear by what it solves, compatibility, practical trade-offs, and total cost—not hype.",
+      "category": "hardware",
+      "label": "Hardware · Topic",
+      "href": "guides.html?category=hardware",
+      "featured": false
+    },
+    {
+      "id": "software-guides",
+      "title": "Tech Software Guides",
+      "summary": "Setup, troubleshooting, and workflow advice for the software you use every day.",
+      "category": "software",
+      "label": "Software · Topic",
+      "href": "guides.html?category=software",
+      "featured": false
+    }
+  ],
+  "reviews": [
+    {
+      "id": "review-policy",
+      "title": "How We Approach Reviews",
+      "summary": "We distinguish hands-on experience from research, explain trade-offs, and disclose affiliate relationships.",
+      "category": "editorial",
+      "label": "Editorial standard",
+      "href": "reviews.html",
+      "featured": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+TCD Studio v3 — Cam Apps + Mic Info update
+
+The Cam Creator page now includes a dedicated “DJI Mic Mini + OBS Studio” section with:
+- RX connected to desktop by USB; OBS at 48 kHz; Stereo where appropriate.
+- The author's OBS filter chain and exact starting values.
+- Test-recording reminder and caution that +15 dB gain is setup-specific.
+- Desktop receiver vs mobile receiver workflow and compatibility warning for DMMR02 / Lightning adapters.
+- Link to the complete dji-mic-mini-obs-guide.html page.
+
+Main integration point:
+public/cam-guides.html#microphone-setup
+
+Full guide:
+public/dji-mic-mini-obs-guide.html
+
+No deployment or Git push was performed.

@@ -141,3 +141,21 @@ Google sign-in requires OAuth credentials from Google Cloud Console. Authenticat
 - Set `NODE_ENV=production`, `SESSION_SECRET` (32+ random characters), `DATABASE_URL`, `APP_BASE_URL`, and optional Google OAuth values in Railway. The app now trusts Railway's first proxy in production for HTTPS secure cookies.
 - Test `/api/auth/csrf` and confirm a `tcd.sid` cookie is stored; test customer registration/login, Google sign-in, verified admin promotion, then enroll and test authenticator login.
 - Only switch production after tests pass. Existing Stripe, SMTP, and private object-storage settings must be preserved/configured independently.
+
+## TCD Studio v3 website layout and content workflow
+
+The deployed website is served from `public/`. Shared presentation styles are in `public/css/site-v3.css`; the existing `public/css/styles.css` remains loaded for application-specific shop, account, and admin components.
+
+### Add or update a guide without editing HTML
+1. Run the project through the normal local web server (the guide library uses `fetch`, so do not open HTML via `file://`).
+2. Open `/content-studio.html` locally. This is a client-side editor; it does not write to the server or database.
+3. Add/edit/delete guide cards and select **Export content-library.json**.
+4. Replace `public/data/content-library.json` with the downloaded file.
+5. Preview the homepage, `/guides.html`, and `/cam-guides.html`. Commit to the staging branch and test staging before any production merge.
+
+Guide entries use `title`, `summary`, `category`, `label`, `href`, and `featured`. The `href` must point to an existing local page or a deliberate external URL. The Chaturbate starter guide and DJI Mic Mini + OBS guide are included as complete pages under `public/`.
+
+### Important
+- The Content Studio is a local convenience tool, not a server-side CMS; exported changes must still be committed/deployed with the project.
+- Account, store, checkout, and admin JavaScript files are retained. This rebuild changes the public presentation layer and guide library, not the authentication or payment backend.
+- Use the local → staging → production workflow. This ZIP has not been deployed.
