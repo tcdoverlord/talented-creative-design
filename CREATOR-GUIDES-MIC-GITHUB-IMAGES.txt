@@ -1,0 +1,13 @@
+TCD Studio v3 — GitHub-hosted DJI Mic Mini images
+
+The Cam Creator microphone section now uses product/guide images from the user's own public repository:
+https://github.com/tcdoverlord/dji-mic-mini-obs-guide
+
+Image source paths:
+- DJIMicMiniOBSAudioGuide.jpg
+- DJI Mic Mini (2 TX + 1 RX + Charging Case), Ultralight, Detail-Rich Audio.jpg
+- DJI Mic Series Mobile Receiver.jpg
+- DJI Mic Mini Mobile Phone Adapter (Lightning).jpg
+
+Images load from raw.githubusercontent.com and include descriptive alt text and lazy loading.
+The full standalone guide remains linked. No GitHub commits or deployment were performed.
