@@ -8,3 +8,11 @@ coverage/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local recovery copies; do not publish these
+*.bak
+*.bak-*
+
+# Local recovery copies; do not publish these
+*.bak
+*.bak-*

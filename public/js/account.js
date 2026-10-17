@@ -11,6 +11,10 @@
   const twoFactorForm = document.querySelector("#two-factor-form");
   let mode = "signin";
   let csrfToken = "";
+  const requestedNext = new URLSearchParams(window.location.search).get("next") || "";
+  const safeNext = requestedNext.startsWith("/") && !requestedNext.startsWith("//") && !requestedNext.includes("\\") ? requestedNext : "/account.html";
+  const googleLink = document.querySelector(".google-signin");
+  if (googleLink && safeNext !== "/account.html") googleLink.href = "/auth/google?next=" + encodeURIComponent(safeNext);
 
   function showMessage(text, isError = false) {
     message.textContent = text;
@@ -72,7 +76,7 @@
       }
       csrfToken = result.csrfToken || "";
       showMessage(mode === "register" ? "Your account has been created. Opening your account…" : "Signed in successfully. Opening your account…");
-      window.location.href = "/account.html";
+      window.location.href = safeNext;
     } catch {
       showMessage("Could not contact the account server. Make sure the backend is running and try again.", true);
     } finally {
@@ -83,7 +87,7 @@
 
   if (twoFactorForm) twoFactorForm.addEventListener("submit", async event => {
     event.preventDefault(); message.hidden = true;
-    try { if (!csrfToken) await getCsrf(); const code = String(new FormData(twoFactorForm).get("code") || "").trim(); const response = await fetch("/api/auth/2fa/verify", {method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json","X-CSRF-Token":csrfToken},body:JSON.stringify({code})}); const result = await response.json().catch(()=>({})); if(!response.ok) throw new Error(result.error || "Could not verify code."); csrfToken=result.csrfToken||""; window.location.href="/account.html"; } catch(error) { showMessage(error.message,true); }
+    try { if (!csrfToken) await getCsrf(); const code = String(new FormData(twoFactorForm).get("code") || "").trim(); const response = await fetch("/api/auth/2fa/verify", {method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json","X-CSRF-Token":csrfToken},body:JSON.stringify({code})}); const result = await response.json().catch(()=>({})); if(!response.ok) throw new Error(result.error || "Could not verify code."); csrfToken=result.csrfToken||""; window.location.href=safeNext; } catch(error) { showMessage(error.message,true); }
   });
 
   forgotForm.addEventListener("submit", async event => {

@@ -159,3 +159,10 @@ Guide entries use `title`, `summary`, `category`, `label`, `href`, and `featured
 - The Content Studio is a local convenience tool, not a server-side CMS; exported changes must still be committed/deployed with the project.
 - Account, store, checkout, and admin JavaScript files are retained. This rebuild changes the public presentation layer and guide library, not the authentication or payment backend.
 - Use the local → staging → production workflow. This ZIP has not been deployed.
+
+### Member perk: Cam Model Profile Builder
+- The builder source is stored under `private/cam-model-profile-builder.html`, outside the public static directory.
+- `GET /cam-model-profile-builder.html` checks the signed-in session before sending the page; logged-out visitors are redirected to `login.html?next=...`.
+- Successful email/password and Google sign-in return users to the requested local page. External redirect targets are rejected.
+- The builder generates HTML in the browser; profile entries are not posted to or saved on the TCD server. Access currently requires a signed-in account, not a paid subscription entitlement.
+- Keep the route before `express.static` so the private page cannot be served as a public static file.
